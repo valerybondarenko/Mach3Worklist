@@ -8,3 +8,13 @@ C:\Users\Admin\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.
 C:\Users\Admin\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.csproj.CoreCompileInputs.cache
 C:\Users\Admin\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.exe
 C:\Users\Admin\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.pdb
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\bin\Debug\Mach3Worklist.exe.config
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\bin\Debug\Mach3Worklist.exe
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\bin\Debug\Mach3Worklist.pdb
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.csproj.AssemblyReference.cache
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.Form1.resources
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.Properties.Resources.resources
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.csproj.GenerateResource.cache
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.csproj.CoreCompileInputs.cache
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.exe
+C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.pdb

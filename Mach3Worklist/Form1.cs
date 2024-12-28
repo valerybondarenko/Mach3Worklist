@@ -35,5 +35,43 @@ namespace Mach3Worklist
         {
 
         }
+
+        private void openGCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            // активирует процесс обработки таблицы.
+            // меняет текст кнопки на "Стоп"
+            // все елементы управления списком становятся недоступными
+            // в Mach3 загружается программа G-code из активной строки
+            // после выполнения текущей программы взависимости от режима 
+            // или повторяется выполнение программы из текущей строки, или 
+            // происходит переход к программе из следующей строки 
+            // доступные режимы:
+            //      1 - по одной из каждой строки
+            //      2 - до конца каждой строки
+            //      3 - выборочно по кнопке из зоны обработки
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void removeRowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(listView1.SelectedItems.Count > 0)
+            {
+                this.listView1.Items.Remove(this.listView1.SelectedItems[0]);
+            }
+        }
+
+        private void quantityEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
