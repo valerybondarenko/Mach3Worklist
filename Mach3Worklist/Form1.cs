@@ -123,7 +123,7 @@ namespace Mach3Worklist
                 {
                     foreach (ListViewItem item in listView1.Items)
                     {
-                        sw.WriteLine("{0}{1}{2}{3}{4}{5}{6}", item.SubItems[0].Text, " ", item.SubItems[1].Text, " ", item.SubItems[2].Text, " ", item.SubItems[3].Text);
+                        sw.WriteLine("{0}{1}{2}{3}{4}{5}{6}", item.SubItems[0].Text, "\r\n", item.SubItems[1].Text, "\r\n", item.SubItems[2].Text, "\r\n", item.SubItems[3].Text);
                     }
                 }
             }
