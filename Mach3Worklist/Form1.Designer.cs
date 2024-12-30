@@ -41,6 +41,9 @@
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openGCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quantityEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quotaEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zoneEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -51,9 +54,6 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
-            this.quantityEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.quotaEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoneEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -85,25 +85,27 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "Новый";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Открыть";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Сохранить";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAsToolStripMenuItem.Text = "Сохранить как";
             // 
             // settingsToolStripMenuItem
@@ -159,6 +161,25 @@
             this.openGCodeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openGCodeToolStripMenuItem.Text = "Открыть G-code";
             this.openGCodeToolStripMenuItem.Click += new System.EventHandler(this.openGCodeToolStripMenuItem_Click);
+            // 
+            // quantityEditToolStripMenuItem
+            // 
+            this.quantityEditToolStripMenuItem.Name = "quantityEditToolStripMenuItem";
+            this.quantityEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quantityEditToolStripMenuItem.Text = "Количество";
+            this.quantityEditToolStripMenuItem.Click += new System.EventHandler(this.quantityEditToolStripMenuItem_Click);
+            // 
+            // quotaEditToolStripMenuItem
+            // 
+            this.quotaEditToolStripMenuItem.Name = "quotaEditToolStripMenuItem";
+            this.quotaEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quotaEditToolStripMenuItem.Text = "Квота";
+            // 
+            // zoneEditToolStripMenuItem
+            // 
+            this.zoneEditToolStripMenuItem.Name = "zoneEditToolStripMenuItem";
+            this.zoneEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoneEditToolStripMenuItem.Text = "Зона";
             // 
             // tableLayoutPanel1
             // 
@@ -259,25 +280,6 @@
             // 
             this.dlgOpenFile.FileName = "dlgOpenFile";
             // 
-            // quantityEditToolStripMenuItem
-            // 
-            this.quantityEditToolStripMenuItem.Name = "quantityEditToolStripMenuItem";
-            this.quantityEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.quantityEditToolStripMenuItem.Text = "Количество";
-            this.quantityEditToolStripMenuItem.Click += new System.EventHandler(this.quantityEditToolStripMenuItem_Click);
-            // 
-            // quotaEditToolStripMenuItem
-            // 
-            this.quotaEditToolStripMenuItem.Name = "quotaEditToolStripMenuItem";
-            this.quotaEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.quotaEditToolStripMenuItem.Text = "Квота";
-            // 
-            // zoneEditToolStripMenuItem
-            // 
-            this.zoneEditToolStripMenuItem.Name = "zoneEditToolStripMenuItem";
-            this.zoneEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.zoneEditToolStripMenuItem.Text = "Зона";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -295,6 +297,7 @@
             this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.listFileName = "";
 
         }
 
@@ -326,6 +329,7 @@
         private System.Windows.Forms.ToolStripMenuItem quantityEditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quotaEditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoneEditToolStripMenuItem;
+        private string listFileName;
     }
 }
 
