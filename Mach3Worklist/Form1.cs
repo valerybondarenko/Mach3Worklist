@@ -16,6 +16,7 @@ namespace Mach3Worklist
         public Form1()
         {
             InitializeComponent();
+            listFileName = "";
         }
 
         private void addRowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,7 +78,11 @@ namespace Mach3Worklist
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listView1.Items.Count > 0) 
+            newList();
+        }
+        private void newList()
+        {
+            if (listView1.Items.Count > 0)
             {
                 if (savePromt())
                 {
@@ -85,8 +90,10 @@ namespace Mach3Worklist
                     // если файл уже был сохранен - перезаписываем файл
                     // свойство this.FileName=="";
                     // иначе сохраняем под новым именем
+                    saveList();
                 }
                 listView1.Items.Clear();
+                listFileName = "";
             }
         }
         private bool savePromt()
@@ -105,7 +112,11 @@ namespace Mach3Worklist
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.listFileName == "") 
+            saveList();
+        }
+        private void saveList()
+        {
+            if (this.listFileName == "")
             {
                 SaveFileDialog sfd = new SaveFileDialog();
 
@@ -115,9 +126,9 @@ namespace Mach3Worklist
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     listFileName = sfd.FileName.ToString();
-                }               
+                }
             }
-            if (listFileName != "")
+            if (listFileName != "" || listFileName !=null)
             {
                 using (StreamWriter sw = new StreamWriter(listFileName))
                 {
@@ -128,27 +139,49 @@ namespace Mach3Worklist
                 }
             }
         }
-        private void export2File(ListView lv, string splitter)
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string filename = "";
             SaveFileDialog sfd = new SaveFileDialog();
 
             sfd.Title = "SaveFileDialog Export2File";
-            sfd.Filter = "Text File (.txt) | *.txt";
+            sfd.Filter = "Mach3 work list (.m3l) | *.m3l";
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                filename = sfd.FileName.ToString();
-                if (filename != "")
+                listFileName = sfd.FileName.ToString();
+            }
+            saveList();
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            newList();
+            dlgOpenFile = new OpenFileDialog();
+            dlgOpenFile.Filter = "Mach3 work list (.m3l) | *.m3l";
+            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+            {
+                string line;
+                StreamReader sr = new StreamReader(dlgOpenFile.FileName);
+                line = sr.ReadLine();
+                while (line != null) 
                 {
-                    using (StreamWriter sw = new StreamWriter(filename))
-                    {
-                        foreach (ListViewItem item in lv.Items)
-                        {
-                            sw.WriteLine("{0}{1}{2}", item.SubItems[0].Text, splitter, item.SubItems[1].Text);
-                        }
-                    }
+                    ListViewItem lvItem = new ListViewItem(line);
+                    line = sr.ReadLine();
+                    lvItem.SubItems.Add(line);
+                    line = sr.ReadLine();
+                    lvItem.SubItems.Add(line);
+                    line = sr.ReadLine();
+                    lvItem.SubItems.Add(line);
+                    this.listView1.Items.Add(lvItem);
+                    line = sr.ReadLine();
                 }
+                
             }
         }
     }
