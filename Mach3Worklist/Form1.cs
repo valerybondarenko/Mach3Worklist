@@ -17,6 +17,7 @@ namespace Mach3Worklist
         {
             InitializeComponent();
             listFileName = "";
+            this.Text = "Mach3 worklist "+listFileName;
         }
 
         private void addRowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -94,6 +95,7 @@ namespace Mach3Worklist
                 }
                 listView1.Items.Clear();
                 listFileName = "";
+                this.Text = "Mach3 worklist " + listFileName;
             }
         }
         private bool savePromt()
@@ -128,7 +130,7 @@ namespace Mach3Worklist
                     listFileName = sfd.FileName.ToString();
                 }
             }
-            if (listFileName != "" || listFileName !=null)
+            if (listFileName != "" && listFileName !=null)
             {
                 using (StreamWriter sw = new StreamWriter(listFileName))
                 {
@@ -137,6 +139,7 @@ namespace Mach3Worklist
                         sw.WriteLine("{0}{1}{2}{3}{4}{5}{6}", item.SubItems[0].Text, "\r\n", item.SubItems[1].Text, "\r\n", item.SubItems[2].Text, "\r\n", item.SubItems[3].Text);
                     }
                 }
+                this.Text = "Mach3 worklist " + listFileName;
             }
         }
 
@@ -166,7 +169,9 @@ namespace Mach3Worklist
             dlgOpenFile.Filter = "Mach3 work list (.m3l) | *.m3l";
             if (dlgOpenFile.ShowDialog() == DialogResult.OK)
             {
-                string line;
+                string line = null;
+                listFileName = dlgOpenFile.FileName;
+                this.Text = "Mach3 worklist " + listFileName;
                 StreamReader sr = new StreamReader(dlgOpenFile.FileName);
                 line = sr.ReadLine();
                 while (line != null) 
@@ -181,7 +186,29 @@ namespace Mach3Worklist
                     this.listView1.Items.Add(lvItem);
                     line = sr.ReadLine();
                 }
-                
+                sr.Close();
+            }
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
+            if(indexSI > 0)
+            {
+                ListViewItem lvItem = this.listView1.SelectedItems[0];
+                listView1.Items.RemoveAt(indexSI);
+                listView1.Items.Insert(indexSI-1, lvItem);
+            }
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
+            if (indexSI < this.listView1.Items.Count-1)
+            {
+                ListViewItem lvItem = this.listView1.SelectedItems[0];
+                listView1.Items.RemoveAt(indexSI);
+                listView1.Items.Insert(indexSI+1, lvItem);
             }
         }
     }
