@@ -8,6 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+
 
 namespace Mach3Worklist
 {
@@ -23,8 +28,9 @@ namespace Mach3Worklist
         private void addRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dlgOpenFile = new OpenFileDialog();
-            
-            if(dlgOpenFile.ShowDialog() == DialogResult.OK )
+            dlgOpenFile.Filter = "CNC G-code files (*.tap; *.nc) | *.tap; *nc| All files(*.*) | *.*";
+
+            if (dlgOpenFile.ShowDialog() == DialogResult.OK )
             {
                 ListViewItem lvItem = new ListViewItem(dlgOpenFile.FileName);
                 lvItem.SubItems.Add("0");
@@ -46,23 +52,10 @@ namespace Mach3Worklist
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            // активирует процесс обработки таблицы.
-            // меняет текст кнопки на "Стоп"
-            // все елементы управления списком становятся недоступными
-            // в Mach3 загружается программа G-code из активной строки
-            // после выполнения текущей программы взависимости от режима 
-            // или повторяется выполнение программы из текущей строки, или 
-            // происходит переход к программе из следующей строки 
-            // доступные режимы:
-            //      1 - по одной из каждой строки
-            //      2 - до конца каждой строки
-            //      3 - выборочно по кнопке из зоны обработки
-        }
-
-        private void listView1_DoubleClick(object sender, EventArgs e)
-        {
 
         }
+
+
 
         private void removeRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -74,7 +67,8 @@ namespace Mach3Worklist
 
         private void quantityEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter your name", "Input Box", "");
+            MessageBox.Show("Hello, " + input);
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -157,10 +151,7 @@ namespace Mach3Worklist
             saveList();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
-        }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -210,6 +201,84 @@ namespace Mach3Worklist
                 listView1.Items.RemoveAt(indexSI);
                 listView1.Items.Insert(indexSI+1, lvItem);
             }
+        }
+
+        private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            ListViewHitTestInfo i = listView1.HitTest(e.X, e.Y);
+            SelectedLSI = i.SubItem;
+            int columnindex = i.Item.SubItems.IndexOf(i.SubItem);
+            string columnHeader;
+            switch (columnindex)
+            {
+                case 1:
+                    columnHeader = "Количество";
+                    break;
+                case 2:
+                    columnHeader = "Квота";
+                    break;
+                case 3:
+                    columnHeader = "Зона";
+                    break;
+                default:
+                    return;
+            }
+            
+            
+            string input = Microsoft.VisualBasic.Interaction.InputBox(columnHeader, "Введите значение",  SelectedLSI.Text);
+            string output = string.Concat(input.Where(char.IsDigit));
+            if (output.Length > 0)
+            { 
+            SelectedLSI.Text = output;
+            }
+
+        }
+
+        private void circleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.circleToolStripMenuItem.Checked = true;
+            this.lineToolStripMenuItem.Checked = false;
+            this.selectiveToolStripMenuItem.Checked = false;
+            this.lblMode.Text = "По кругу";
+        }
+
+        private void lineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.lineToolStripMenuItem.Checked = true;
+            this.circleToolStripMenuItem.Checked = false;
+            this.selectiveToolStripMenuItem.Checked = false;
+            this.lblMode.Text = "Линейно";
+        }
+
+        private void selectiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.selectiveToolStripMenuItem.Checked = true;
+            this.lineToolStripMenuItem.Checked = false;
+            this.circleToolStripMenuItem.Checked = false;
+            this.lblMode.Text = "Выборочно";
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.lblStatus.Text = System.Convert.ToString(1);
+        }
+
+        private void btnStart_Click_1(object sender, EventArgs e)
+        {
+            // активирует процесс обработки таблицы.
+            this.timer1 = new Timer();
+            this.timer1.Interval = 2000;
+            this.timer1.Start();
+            // меняет текст кнопки на "Стоп"
+            // все елементы управления списком становятся недоступными
+            // в Mach3 загружается программа G-code из активной строки
+            // после выполнения текущей программы взависимости от режима 
+            // или повторяется выполнение программы из текущей строки, или 
+            // происходит переход к программе из следующей строки 
+            // доступные режимы:
+            //      1 - по одной из каждой строки
+            //      2 - до конца каждой строки
+            //      3 - выборочно по кнопке из зоны обработки
         }
     }
 }
