@@ -260,15 +260,33 @@ namespace Mach3Worklist
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            this.lblStatus.Text = System.Convert.ToString(1);
+            if (this.listView1.SelectedItems.Count > 0)
+            {
+               int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
+               int count =System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
+                if (count<quota) 
+                {
+                    count++;
+                    this.listView1.SelectedItems[0].SubItems[1].Text = count.ToString();
+                } else
+                {
+                    this.timer1.Stop();
+                    return;
+                    
+                }
+               
+            }
+            
         }
 
         private void btnStart_Click_1(object sender, EventArgs e)
         {
             // активирует процесс обработки таблицы.
-            this.timer1 = new Timer();
+          //  this.timer1 = new System.Windows.Forms.Timer();
+            this.timer1.Enabled = true;
             this.timer1.Interval = 2000;
             this.timer1.Start();
+            // this.lblStatus.Text = System.Convert.ToString(1);
             // меняет текст кнопки на "Стоп"
             // все елементы управления списком становятся недоступными
             // в Mach3 загружается программа G-code из активной строки

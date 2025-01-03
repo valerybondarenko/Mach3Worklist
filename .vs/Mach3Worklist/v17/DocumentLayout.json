@@ -32,14 +32,6 @@
           "SelectedChildIndex": 4,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "App.config",
@@ -50,8 +42,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
               "WhenOpened": "2024-12-30T16:40:41.227Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -64,8 +55,15 @@
               "ViewState": "AgIAAIYBAAAAAAAAAAAAAFkBAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-23T18:44:16.873Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
             },
             {
               "$type": "Document",
@@ -75,7 +73,7 @@
               "RelativeDocumentMoniker": "Mach3Worklist\\Form1.cs",
               "ToolTip": "C:\\Users\\Admin\\source\\repos\\Mach3Worklist\\Mach3Worklist\\Form1.cs",
               "RelativeToolTip": "Mach3Worklist\\Form1.cs",
-              "ViewState": "AgIAAAQBAAAAAAAAAAAwwA4BAAAgAAAAAAAAAA==",
+              "ViewState": "AgIAAAIBAAAAAAAAAAAowBEBAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-02T10:40:22.053Z",
               "EditorCaption": ""
@@ -90,8 +88,7 @@
               "RelativeToolTip": "..\\elv\\Form1.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAFQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-02T10:11:29.323Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-02T10:11:29.323Z"
             },
             {
               "$type": "Document",
@@ -102,8 +99,7 @@
               "ToolTip": "C:\\Users\\Admin\\source\\repos\\Mach3Worklist\\Mach3Worklist\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "RelativeToolTip": "Mach3Worklist\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T18:34:17.104Z",
-              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+              "WhenOpened": "2024-12-23T18:34:17.104Z"
             }
           ]
         }
