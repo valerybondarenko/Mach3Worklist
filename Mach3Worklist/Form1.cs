@@ -18,11 +18,27 @@ namespace Mach3Worklist
 {
     public partial class Form1 : Form
     {
+        private enum ExeMode
+        {
+            Line,
+            Circle,
+            Selective
+        }
+
+        private enum ExeStatus
+        {
+            Stoped,
+            Runing,
+            Aborted
+        }
         public Form1()
         {
             InitializeComponent();
             listFileName = "";
             this.Text = "Mach3 worklist "+listFileName;
+            eMode = ExeMode.Line;
+            eStatus = ExeStatus.Stoped;
+
         }
 
         private void addRowToolStripMenuItem_Click(object sender, EventArgs e)
@@ -40,22 +56,10 @@ namespace Mach3Worklist
             }
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void openGCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
-
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
 
         private void removeRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -205,6 +209,10 @@ namespace Mach3Worklist
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                currentLineIndex = this.listView1.SelectedItems[0].Index;
+            }
             ListViewHitTestInfo i = listView1.HitTest(e.X, e.Y);
             SelectedLSI = i.SubItem;
             int columnindex = i.Item.SubItems.IndexOf(i.SubItem);
@@ -240,6 +248,7 @@ namespace Mach3Worklist
             this.lineToolStripMenuItem.Checked = false;
             this.selectiveToolStripMenuItem.Checked = false;
             this.lblMode.Text = "По кругу";
+            this.eMode = ExeMode.Circle;
         }
 
         private void lineToolStripMenuItem_Click(object sender, EventArgs e)
@@ -248,6 +257,7 @@ namespace Mach3Worklist
             this.circleToolStripMenuItem.Checked = false;
             this.selectiveToolStripMenuItem.Checked = false;
             this.lblMode.Text = "Линейно";
+            this.eMode = ExeMode.Line;
         }
 
         private void selectiveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -256,6 +266,7 @@ namespace Mach3Worklist
             this.lineToolStripMenuItem.Checked = false;
             this.circleToolStripMenuItem.Checked = false;
             this.lblMode.Text = "Выборочно";
+            this.eMode = ExeMode.Selective;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -264,10 +275,11 @@ namespace Mach3Worklist
             {
                int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
                int count =System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
+
                 if (count<quota) 
                 {
                     count++;
-                    this.listView1.SelectedItems[0].SubItems[1].Text = count.ToString();
+                    this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
                 } else
                 {
                     this.timer1.Stop();
@@ -286,7 +298,8 @@ namespace Mach3Worklist
             this.timer1.Enabled = true;
             this.timer1.Interval = 2000;
             this.timer1.Start();
-            // this.lblStatus.Text = System.Convert.ToString(1);
+            this.btnStart.Text = "Стоп";
+
             // меняет текст кнопки на "Стоп"
             // все елементы управления списком становятся недоступными
             // в Mach3 загружается программа G-code из активной строки
@@ -297,6 +310,15 @@ namespace Mach3Worklist
             //      1 - по одной из каждой строки
             //      2 - до конца каждой строки
             //      3 - выборочно по кнопке из зоны обработки
+        }
+
+        private void listView1_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                currentLineIndex = this.listView1.SelectedItems[0].Index;
+            }
+            
         }
     }
 }

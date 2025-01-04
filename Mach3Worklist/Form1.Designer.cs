@@ -63,6 +63,8 @@ namespace Mach3Worklist
             this.lblMode = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -262,6 +264,7 @@ namespace Mach3Worklist
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.Click += new System.EventHandler(this.listView1_Click);
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             // 
             // columnHeader1
@@ -286,13 +289,17 @@ namespace Mach3Worklist
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnCount = 5;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel2.Controls.Add(this.btnStart, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblStatus, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lblMode, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label2, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.btnStart, 4, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblStatus, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblMode, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 209);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -318,12 +325,10 @@ namespace Mach3Worklist
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblStatus.Location = new System.Drawing.Point(3, 7);
+            this.lblStatus.Location = new System.Drawing.Point(83, 7);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(147, 20);
+            this.lblStatus.Size = new System.Drawing.Size(0, 20);
             this.lblStatus.TabIndex = 1;
-            this.lblStatus.Text = "Нет подключения";
-            this.lblStatus.Click += new System.EventHandler(this.label1_Click);
             // 
             // lblMode
             // 
@@ -334,7 +339,6 @@ namespace Mach3Worklist
             this.lblMode.Name = "lblMode";
             this.lblMode.Size = new System.Drawing.Size(114, 34);
             this.lblMode.TabIndex = 3;
-            this.lblMode.Text = "Режим";
             this.lblMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // dlgOpenFile
@@ -345,6 +349,30 @@ namespace Mach3Worklist
             // 
             this.timer1.Interval = 2000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(74, 34);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Статус";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(536, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(74, 34);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Режим";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Form1
             // 
@@ -393,8 +421,7 @@ namespace Mach3Worklist
         private System.Windows.Forms.ToolStripMenuItem quantityEditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quotaEditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoneEditToolStripMenuItem;
-        ListViewItem.ListViewSubItem SelectedLSI;
-        private string listFileName;
+        private ListViewItem.ListViewSubItem SelectedLSI;
         private Button btnStart;
         private Label lblMode;
         private ToolStripMenuItem modeToolStripMenuItem;
@@ -402,6 +429,12 @@ namespace Mach3Worklist
         private ToolStripMenuItem circleToolStripMenuItem;
         private ToolStripMenuItem selectiveToolStripMenuItem;
         private Timer timer1;
+        private ExeMode eMode;
+        private ExeStatus eStatus;
+        private string listFileName;
+        private int currentLineIndex;
+        private Label label2;
+        private Label label1;
     }
 }
 
