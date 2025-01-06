@@ -27,8 +27,11 @@ namespace Mach3Worklist
 
         private enum ExeStatus
         {
-            Stoped,
+            Non,
+            Ready,
             Runing,
+            Stoped,
+            Сompleted,
             Aborted
         }
         public Form1()
@@ -37,7 +40,8 @@ namespace Mach3Worklist
             listFileName = "";
             this.Text = "Mach3 worklist "+listFileName;
             eMode = ExeMode.Line;
-            eStatus = ExeStatus.Stoped;
+            statusChange(ExeStatus.Ready);
+
 
         }
         // РАЗДЕЛ МЕНЮ - ИЗМЕНИТЬ
@@ -113,6 +117,7 @@ namespace Mach3Worklist
                 listView1.Items.Clear();
                 listFileName = "";
                 this.Text = "Mach3 worklist " + listFileName;
+                statusChange(ExeStatus.Ready);
             }
         }
         private bool savePromt()
@@ -201,6 +206,7 @@ namespace Mach3Worklist
                     line = sr.ReadLine();
                 }
                 sr.Close();
+                statusChange(ExeStatus.Ready);
             }
         }
 
@@ -280,8 +286,9 @@ namespace Mach3Worklist
         // ОБРАБОТКА ВЫПОЛНЕНИЯ ПРОГРАММ 
         private void timer1_Tick(object sender, EventArgs e)
         {
-                int quota = System.Convert.ToInt32(this.listView1.SelectedItems[currentLineIndex].SubItems[2].Text);
-            int count = System.Convert.ToInt32(this.listView1.SelectedItems[currentLineIndex].SubItems[1].Text);
+            int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
+            int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
+            this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
 
             if (this.eMode == ExeMode.Circle)
             {
@@ -289,60 +296,66 @@ namespace Mach3Worklist
                 {
                     count++;
                     this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
-                    if (this.listView1.Items.Count  > currentLineIndex + 1)
+                    if (this.listView1.Items.Count > currentLineIndex + 1)
                     {
                         this.listView1.Items[currentLineIndex].Selected = false;
                         currentLineIndex++;
                         this.listView1.Items[currentLineIndex].Selected = true;
-                    } else
+                    }
+                    else
                     {
                         this.listView1.Items[currentLineIndex].Selected = false;
-                        currentLineIndex=0;
+                        currentLineIndex = 0;
                         this.listView1.Items[currentLineIndex].Selected = true;
                     }
                 }
                 else
                 {
-                    this.timer1.Stop();
+                    statusChange(ExeStatus.Сompleted);
                     return;
 
                 }
 
 
-            } else if(this.eMode == ExeMode.Line)
-            {
-
-            }else if (this.eMode == ExeMode.Selective)
-            {
-
             }
+            else if (this.eMode == ExeMode.Line)
 
 
+                    if (quota > count)
+                    {
+                        count++;
+                        this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
+                    }
+                    else if (currentLineIndex + 1 < this.listView1.Items.Count)
+                    {
+                    Page(1);
+                    }
+                    else
+                    {
+                        statusChange(ExeStatus.Сompleted);
+                        return;
+                    }
+                
 
+                else if (this.eMode == ExeMode.Selective)
+                {
 
+                }
 
-            
-            
         }
 
         private void btnStart_Click_1(object sender, EventArgs e)
         {
             // активирует процесс обработки таблицы.
-          //  this.timer1 = new System.Windows.Forms.Timer();
-          if(this.eStatus == ExeStatus.Stoped)
+            //  this.timer1 = new System.Windows.Forms.Timer();
+            if(eStatus!=ExeStatus.Runing)
             {
-                this.timer1.Enabled = true;
-                this.timer1.Interval = 2000;
-                this.timer1.Start();
-                this.btnStart.Text = "Стоп";
-                this.eStatus = ExeStatus.Runing;
-                this.lblStatus.Text = "Выполняется - "+ this.listView1.Items[currentLineIndex].Text;
-            } else if(this.eStatus == ExeStatus.Runing)
+                statusChange(ExeStatus.Runing);
+            } else if(eStatus == ExeStatus.Runing)
             {
-                this.timer1.Stop();
-                this.btnStart.Text = "Старт";
-                this.eStatus = ExeStatus.Stoped;
+                statusChange(ExeStatus.Stoped);
             }
+            
             
 
             // меняет текст кнопки на "Стоп"
@@ -356,7 +369,69 @@ namespace Mach3Worklist
             //      2 - до конца каждой строки
             //      3 - выборочно по кнопке из зоны обработки
         }
+        private void statusChange(ExeStatus status)
+        {
+            if (eStatus == status) { return;}
+            this.eStatus=status;
+            if (this.eStatus == ExeStatus.Runing)
+            {
+                if (listView1.SelectedIndices.Count > 0)
+                {
+                    this.btnStart.Text = "Стоп";
+                    this.eStatus = ExeStatus.Runing;
+                    this.timer1.Enabled = true;
+                    this.timer1.Interval = 2000;
+                    this.timer1.Start();
+                }
+                    
+            }
+            else if (this.eStatus == ExeStatus.Stoped)
+            {
+                this.timer1.Stop();
+                this.btnStart.Text = "Старт";
+                this.lblStatus.Text = "Остановлен";
+            }
+            else if (this.eStatus == ExeStatus.Сompleted)
+            {
+                this.timer1.Stop();
+                this.btnStart.Text = "Старт";
+                this.lblStatus.Text = "Завершен";
+            }
+            else if (this.eStatus == ExeStatus.Ready)
+            {
+                this.btnStart.Text = "Старт";
+                this.lblStatus.Text = "Готов";
+                switch (this.eMode)
+                {
+                    case ExeMode.Line:
+                        this.lblMode.Text = "Линейно";
+                        break;
+                    case ExeMode.Circle:
+                        this.lblMode.Text = "По кругу";
+                        break;
+                    case ExeMode.Selective:
+                        this.lblMode.Text = "Выборочно";
+                        break;
+                }
+                
+            }
+        }
+        private void Page(int UpOrDown)
+        {
+            //Determine if something is selected
+            if (listView1.SelectedIndices.Count > 0)
+            {
+                int oldIndex = listView1.SelectedIndices[0];
+                listView1.SelectedIndices.Clear();
 
-        
+                //Use mod!
+                int numberOfItems = listView1.Items.Count;
+                currentLineIndex = (oldIndex + UpOrDown) % numberOfItems;
+                listView1.SelectedIndices.Add(currentLineIndex);
+            }
+        }
+
+
+
     }
 }

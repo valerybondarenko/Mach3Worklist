@@ -58,13 +58,13 @@ namespace Mach3Worklist
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.lblMode = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -136,27 +136,29 @@ namespace Mach3Worklist
             this.circleToolStripMenuItem,
             this.selectiveToolStripMenuItem});
             this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
-            this.modeToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.modeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.modeToolStripMenuItem.Text = "Режим";
             // 
             // lineToolStripMenuItem
             // 
+            this.lineToolStripMenuItem.Checked = true;
+            this.lineToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.lineToolStripMenuItem.Name = "lineToolStripMenuItem";
-            this.lineToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.lineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.lineToolStripMenuItem.Text = "Линейно";
             this.lineToolStripMenuItem.Click += new System.EventHandler(this.lineToolStripMenuItem_Click);
             // 
             // circleToolStripMenuItem
             // 
             this.circleToolStripMenuItem.Name = "circleToolStripMenuItem";
-            this.circleToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.circleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.circleToolStripMenuItem.Text = "По кругу";
             this.circleToolStripMenuItem.Click += new System.EventHandler(this.circleToolStripMenuItem_Click);
             // 
             // selectiveToolStripMenuItem
             // 
             this.selectiveToolStripMenuItem.Name = "selectiveToolStripMenuItem";
-            this.selectiveToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.selectiveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.selectiveToolStripMenuItem.Text = "Выборочно";
             this.selectiveToolStripMenuItem.Click += new System.EventHandler(this.selectiveToolStripMenuItem_Click);
             // 
@@ -308,6 +310,18 @@ namespace Mach3Worklist
             this.tableLayoutPanel2.Size = new System.Drawing.Size(853, 34);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(536, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(74, 34);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Режим";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // btnStart
             // 
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -341,15 +355,6 @@ namespace Mach3Worklist
             this.lblMode.TabIndex = 3;
             this.lblMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // dlgOpenFile
-            // 
-            this.dlgOpenFile.FileName = "dlgOpenFile";
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 2000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -362,17 +367,14 @@ namespace Mach3Worklist
             this.label1.Text = "Статус";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // dlgOpenFile
             // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(536, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 34);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Режим";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.dlgOpenFile.FileName = "dlgOpenFile";
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 2000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
