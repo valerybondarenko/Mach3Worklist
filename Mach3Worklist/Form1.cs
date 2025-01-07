@@ -348,7 +348,8 @@ namespace Mach3Worklist
         {
             // активирует процесс обработки таблицы.
             //  this.timer1 = new System.Windows.Forms.Timer();
-            if(eStatus!=ExeStatus.Runing)
+            if (this.listView1.SelectedItems.Count < 1) { return;}
+            if (eStatus!=ExeStatus.Runing)
             {
                 statusChange(ExeStatus.Runing);
             } else if(eStatus == ExeStatus.Runing)
