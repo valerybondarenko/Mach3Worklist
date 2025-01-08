@@ -12,6 +12,8 @@ using Microsoft.VisualBasic;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using Mach4;
+using System.Runtime.InteropServices;
 
 
 namespace Mach3Worklist
@@ -44,50 +46,42 @@ namespace Mach3Worklist
 
 
         }
-        // РАЗДЕЛ МЕНЮ - ИЗМЕНИТЬ
+        // Раздел взаимодействие с Mach3
+        public void GetMachInstance(IMach4 _mach)
+        {
+            try
+            {
+                _mach = (IMach4)Marshal.GetActiveObject("Mach4.Document");
+                _mInst = (IMyScriptObject)_mach.GetScriptDispatch();
+            }
+            catch
+            {
+                _mach = null;
+                _mInst = null;
+            }
+
+        }
+
+
+        // РАЗДЕЛ МЕНЮ - СПИСОК
         private void addRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dlgOpenFile = new OpenFileDialog();
-            dlgOpenFile.Filter = "CNC G-code files (*.tap; *.nc) | *.tap; *nc| All files(*.*) | *.*";
-
-            if (dlgOpenFile.ShowDialog() == DialogResult.OK )
-            {
-                ListViewItem lvItem = new ListViewItem(dlgOpenFile.FileName);
-                lvItem.SubItems.Add("0");
-                lvItem.SubItems.Add("1");
-                lvItem.SubItems.Add("1");
-                this.listView1.Items.Add(lvItem);
-            }
+            addLine();
         }
 
         private void removeRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(listView1.SelectedItems.Count > 0)
-            {
-                this.listView1.Items.Remove(this.listView1.SelectedItems[0]);
-            }
+            removeLine();
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
-            if (indexSI > 0)
-            {
-                ListViewItem lvItem = this.listView1.SelectedItems[0];
-                listView1.Items.RemoveAt(indexSI);
-                listView1.Items.Insert(indexSI - 1, lvItem);
-            }
+            moveLineUP();
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
-            if (indexSI < this.listView1.Items.Count - 1)
-            {
-                ListViewItem lvItem = this.listView1.SelectedItems[0];
-                listView1.Items.RemoveAt(indexSI);
-                listView1.Items.Insert(indexSI + 1, lvItem);
-            }
+            moveLineDown();
         }
 
         private void openGCodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -98,9 +92,138 @@ namespace Mach3Worklist
 
         private void quantityEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter your name", "Input Box", "");
-            MessageBox.Show("Hello, " + input);
+            quantityLine();
         }
+
+        private void quotaEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            quotaLine();
+        }
+
+        private void zoneEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zoneLine();
+        }
+
+        // КОНТЕКСТНОЕ МЕНЮ
+
+
+        private void quantToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            quantityLine();
+        }
+
+        private void quotaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            quotaLine();
+        }
+
+        private void zoneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            zoneLine();
+        }
+        private void moveUPToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            moveLineUP();
+        }
+
+        private void moveDOWNToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            moveLineDown();
+        }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            addLine();
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            removeLine();
+        }
+
+
+
+        // Обработка списка
+
+        private void addLine()
+        {
+            dlgOpenFile = new OpenFileDialog();
+            dlgOpenFile.Filter = "CNC G-code files (*.tap; *.nc) | *.tap; *nc| All files(*.*) | *.*";
+
+            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+            {
+                ListViewItem lvItem = new ListViewItem(dlgOpenFile.FileName);
+                lvItem.SubItems.Add("0");
+                lvItem.SubItems.Add("1");
+                lvItem.SubItems.Add("1");
+                this.listView1.Items.Add(lvItem);
+            }
+        }
+        private void removeLine()
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                this.listView1.Items.Remove(this.listView1.SelectedItems[0]);
+            }
+        }
+        private void moveLineUP()
+        {
+            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
+            if (indexSI > 0)
+            {
+                ListViewItem lvItem = this.listView1.SelectedItems[0];
+                listView1.Items.RemoveAt(indexSI);
+                listView1.Items.Insert(indexSI - 1, lvItem);
+            }
+        }
+
+        private void moveLineDown()
+        {
+            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
+            if (indexSI < this.listView1.Items.Count - 1)
+            {
+                ListViewItem lvItem = this.listView1.SelectedItems[0];
+                listView1.Items.RemoveAt(indexSI);
+                listView1.Items.Insert(indexSI + 1, lvItem);
+            }
+        }
+
+        private void quantityLine()
+        {
+            if (listView1.SelectedIndices.Count < 1) { return; }
+            SelectedLSI = listView1.SelectedItems[0].SubItems[1];
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Количество", "Введите значение", SelectedLSI.Text);
+            string output = string.Concat(input.Where(char.IsDigit));
+            if (output.Length > 0)
+            {
+                SelectedLSI.Text = output;
+            }
+        }
+        private void quotaLine()
+        {
+            if (listView1.SelectedIndices.Count < 1) { return; }
+            SelectedLSI = listView1.SelectedItems[0].SubItems[2];
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Квота", "Введите значение", SelectedLSI.Text);
+            string output = string.Concat(input.Where(char.IsDigit));
+            if (output.Length > 0)
+            {
+                SelectedLSI.Text = output;
+            }
+        }
+        private void zoneLine()
+        {
+            if (listView1.SelectedIndices.Count < 1) { return; }
+            SelectedLSI = listView1.SelectedItems[0].SubItems[3];
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Зона", "Введите значение", SelectedLSI.Text);
+            string output = string.Concat(input.Where(char.IsDigit));
+            if (output.Length > 0)
+            {
+                SelectedLSI.Text = output;
+            }
+        }
+
+
         // РАЗДЕЛ МЕНЮ - ФАЙЛ
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -217,10 +340,19 @@ namespace Mach3Worklist
             if (listView1.SelectedItems.Count > 0)
             {
                 currentLineIndex = this.listView1.Items.IndexOf(listView1.SelectedItems[0]);
-                
             }
 
         }
+
+        private void listView1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                contextMenuStrip1.Show(listView1, e.X, e.Y);
+            }
+
+        }
+
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (listView1.SelectedItems.Count > 0)
@@ -255,6 +387,9 @@ namespace Mach3Worklist
             }
 
         }
+
+       
+
         // РАЗДЕЛ МЕНЮ - НАСТРОЙКИ
         private void circleToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -282,9 +417,16 @@ namespace Mach3Worklist
             this.lblMode.Text = "Выборочно";
             this.eMode = ExeMode.Selective;
         }
+        private void connectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GetMachInstance(null);
+            statusChange(ExeStatus.Ready);
+        }
+
+
 
         // ОБРАБОТКА ВЫПОЛНЕНИЯ ПРОГРАММ 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void stepList()
         {
             int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
             int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
@@ -321,55 +463,58 @@ namespace Mach3Worklist
             else if (this.eMode == ExeMode.Line)
 
 
-                    if (quota > count)
-                    {
-                        count++;
-                        this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
-                    }
-                    else if (currentLineIndex + 1 < this.listView1.Items.Count)
-                    {
-                    Page(1);
-                    }
-                    else
-                    {
-                        statusChange(ExeStatus.Сompleted);
-                        return;
-                    }
-                
-
-                else if (this.eMode == ExeMode.Selective)
+                if (quota > count)
                 {
-
+                    count++;
+                    this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
+                }
+                else if (currentLineIndex + 1 < this.listView1.Items.Count)
+                {
+                    Page(1);
+                }
+                else
+                {
+                    statusChange(ExeStatus.Сompleted);
+                    return;
                 }
 
+
+            else if (this.eMode == ExeMode.Selective)
+            {
+
+            }
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if(_mInst == null) { return; }
+            if (eStatus == ExeStatus.Runing) 
+            {
+                bool m3run = _mInst.GetOEMLed(800);
+                if (m3run) 
+                {
+                    
+                    statusChange(ExeStatus.Aborted);
+                    return;
+                }
+            }
         }
 
         private void btnStart_Click_1(object sender, EventArgs e)
         {
             // активирует процесс обработки таблицы.
-            //  this.timer1 = new System.Windows.Forms.Timer();
+
             if (this.listView1.SelectedItems.Count < 1) { return;}
+            if(eStatus==ExeStatus.Non) { return; }
             if (eStatus!=ExeStatus.Runing)
             {
                 statusChange(ExeStatus.Runing);
-            } else if(eStatus == ExeStatus.Runing)
+            } 
+            else if(eStatus == ExeStatus.Runing)
             {
                 statusChange(ExeStatus.Stoped);
             }
-            
-            
-
-            // меняет текст кнопки на "Стоп"
-            // все елементы управления списком становятся недоступными
-            // в Mach3 загружается программа G-code из активной строки
-            // после выполнения текущей программы взависимости от режима 
-            // или повторяется выполнение программы из текущей строки, или 
-            // происходит переход к программе из следующей строки 
-            // доступные режимы:
-            //      1 - по одной из каждой строки
-            //      2 - до конца каждой строки
-            //      3 - выборочно по кнопке из зоны обработки
         }
+
         private void statusChange(ExeStatus status)
         {
             if (eStatus == status) { return;}
@@ -380,28 +525,40 @@ namespace Mach3Worklist
                 {
                     this.btnStart.Text = "Стоп";
                     this.eStatus = ExeStatus.Runing;
-                    this.timer1.Enabled = true;
-                    this.timer1.Interval = 2000;
-                    this.timer1.Start();
+                    stepList();
                 }
-                    
+
             }
             else if (this.eStatus == ExeStatus.Stoped)
             {
-                this.timer1.Stop();
+               // this.timer1.Stop();
                 this.btnStart.Text = "Старт";
                 this.lblStatus.Text = "Остановлен";
             }
             else if (this.eStatus == ExeStatus.Сompleted)
             {
-                this.timer1.Stop();
+               // this.timer1.Stop();
                 this.btnStart.Text = "Старт";
                 this.lblStatus.Text = "Завершен";
             }
             else if (this.eStatus == ExeStatus.Ready)
             {
+                GetMachInstance(null);
+                if (_mInst == null)
+                {
+                    lblStatus.Text = "Нет подключения";
+                    eStatus = ExeStatus.Non;
+                    return;
+                }
+                else
+                {
+                    lblStatus.Text = "Подключено к - " + _mInst.GetActiveProfileName();
+                    this.timer1.Enabled = true;
+                    this.timer1.Interval = 50;
+                    this.timer1.Start();
+                }
                 this.btnStart.Text = "Старт";
-                this.lblStatus.Text = "Готов";
+
                 switch (this.eMode)
                 {
                     case ExeMode.Line:
@@ -414,7 +571,11 @@ namespace Mach3Worklist
                         this.lblMode.Text = "Выборочно";
                         break;
                 }
-                
+
+            }
+            else if (eStatus == ExeStatus.Aborted) 
+            {
+                lblStatus.Text = "Авария!!!";
             }
         }
         private void Page(int UpOrDown)
@@ -432,6 +593,7 @@ namespace Mach3Worklist
             }
         }
 
+       
 
 
     }
