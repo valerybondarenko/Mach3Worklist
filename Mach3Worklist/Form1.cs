@@ -428,10 +428,13 @@ namespace Mach3Worklist
         // ОБРАБОТКА ВЫПОЛНЕНИЯ ПРОГРАММ 
         private void stepList()
         {
+            
             int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
             int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
-            this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
+          //  this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
 
+            _mInst.LoadRun(this.listView1.SelectedItems[0].SubItems[0].Text);
+            if (gcoderun) { return; }
             if (this.eMode == ExeMode.Circle)
             {
                 if (count < quota)
@@ -489,12 +492,21 @@ namespace Mach3Worklist
             if(_mInst == null) { return; }
             if (eStatus == ExeStatus.Runing) 
             {
-                bool m3run = _mInst.GetOEMLed(800);
-                if (m3run) 
+                short m3alarm = _mInst.IsEstop(); // EStop
+                if (m3alarm==1) 
                 {
-                    
+                    gcoderun=false;
                     statusChange(ExeStatus.Aborted);
                     return;
+                }
+                bool m3run = _mInst.GetOEMLed(804); // Run Led off
+                if (m3run)
+                {
+                    
+                    this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
+                } else
+                {
+                    stepList();
                 }
             }
         }

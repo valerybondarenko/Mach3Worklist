@@ -11,6 +11,7 @@ namespace Mach3Worklist
         private System.ComponentModel.IContainer components = null;
         private IMach4 _mach;
         private IMyScriptObject _mInst;
+        private bool gcoderun;
         /// <summary>
         /// Освободить все используемые ресурсы.
         /// </summary>
