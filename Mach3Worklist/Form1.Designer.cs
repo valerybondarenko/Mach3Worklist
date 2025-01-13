@@ -70,13 +70,13 @@ namespace Mach3Worklist
             this.dlgOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveUPToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveDOWNToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.quantToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quotaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveUPToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveDOWNToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -201,56 +201,56 @@ namespace Mach3Worklist
             // addRowToolStripMenuItem
             // 
             this.addRowToolStripMenuItem.Name = "addRowToolStripMenuItem";
-            this.addRowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addRowToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.addRowToolStripMenuItem.Text = "Новая строка";
             this.addRowToolStripMenuItem.Click += new System.EventHandler(this.addRowToolStripMenuItem_Click);
             // 
             // removeRowToolStripMenuItem
             // 
             this.removeRowToolStripMenuItem.Name = "removeRowToolStripMenuItem";
-            this.removeRowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeRowToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.removeRowToolStripMenuItem.Text = "Удалить строку";
             this.removeRowToolStripMenuItem.Click += new System.EventHandler(this.removeRowToolStripMenuItem_Click);
             // 
             // moveUpToolStripMenuItem
             // 
             this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.moveUpToolStripMenuItem.Text = "Строку вверх";
             this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
             // 
             // moveDownToolStripMenuItem
             // 
             this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.moveDownToolStripMenuItem.Text = "Строку вниз";
             this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
             // 
             // openGCodeToolStripMenuItem
             // 
             this.openGCodeToolStripMenuItem.Name = "openGCodeToolStripMenuItem";
-            this.openGCodeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openGCodeToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.openGCodeToolStripMenuItem.Text = "Открыть G-code";
             this.openGCodeToolStripMenuItem.Click += new System.EventHandler(this.openGCodeToolStripMenuItem_Click);
             // 
             // quantityEditToolStripMenuItem
             // 
             this.quantityEditToolStripMenuItem.Name = "quantityEditToolStripMenuItem";
-            this.quantityEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quantityEditToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.quantityEditToolStripMenuItem.Text = "Количество";
             this.quantityEditToolStripMenuItem.Click += new System.EventHandler(this.quantityEditToolStripMenuItem_Click);
             // 
             // quotaEditToolStripMenuItem
             // 
             this.quotaEditToolStripMenuItem.Name = "quotaEditToolStripMenuItem";
-            this.quotaEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.quotaEditToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.quotaEditToolStripMenuItem.Text = "Квота";
             this.quotaEditToolStripMenuItem.Click += new System.EventHandler(this.quotaEditToolStripMenuItem_Click);
             // 
             // zoneEditToolStripMenuItem
             // 
             this.zoneEditToolStripMenuItem.Name = "zoneEditToolStripMenuItem";
-            this.zoneEditToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.zoneEditToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.zoneEditToolStripMenuItem.Text = "Зона";
             this.zoneEditToolStripMenuItem.Click += new System.EventHandler(this.zoneEditToolStripMenuItem_Click);
             // 
@@ -411,7 +411,36 @@ namespace Mach3Worklist
             this.quotaToolStripMenuItem,
             this.zoneToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(159, 158);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 180);
+           
+            // 
+            // addToolStripMenuItem
+            // 
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addToolStripMenuItem.Text = "Новая строка";
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.addRowToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeToolStripMenuItem.Text = "Удалить строку";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeRowToolStripMenuItem_Click);
+            // 
+            // moveUPToolStripMenuItem1
+            // 
+            this.moveUPToolStripMenuItem1.Name = "moveUPToolStripMenuItem1";
+            this.moveUPToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.moveUPToolStripMenuItem1.Text = "Строку вверх";
+            this.moveUPToolStripMenuItem1.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
+            // 
+            // moveDOWNToolStripMenuItem1
+            // 
+            this.moveDOWNToolStripMenuItem1.Name = "moveDOWNToolStripMenuItem1";
+            this.moveDOWNToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.moveDOWNToolStripMenuItem1.Text = "Строку вниз";
+            this.moveDOWNToolStripMenuItem1.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
             // 
             // quantToolStripMenuItem
             // 
@@ -433,34 +462,6 @@ namespace Mach3Worklist
             this.zoneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoneToolStripMenuItem.Text = "Зона";
             this.zoneToolStripMenuItem.Click += new System.EventHandler(this.zoneToolStripMenuItem_Click);
-            // 
-            // moveUPToolStripMenuItem1
-            // 
-            this.moveUPToolStripMenuItem1.Name = "moveUPToolStripMenuItem1";
-            this.moveUPToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
-            this.moveUPToolStripMenuItem1.Text = "Строку вверх";
-            this.moveUPToolStripMenuItem1.Click += new System.EventHandler(this.moveUPToolStripMenuItem1_Click);
-            // 
-            // moveDOWNToolStripMenuItem1
-            // 
-            this.moveDOWNToolStripMenuItem1.Name = "moveDOWNToolStripMenuItem1";
-            this.moveDOWNToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
-            this.moveDOWNToolStripMenuItem1.Text = "Строку вниз";
-            this.moveDOWNToolStripMenuItem1.Click += new System.EventHandler(this.moveDOWNToolStripMenuItem1_Click);
-            // 
-            // addToolStripMenuItem
-            // 
-            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.addToolStripMenuItem.Text = "Новая строка";
-            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.removeToolStripMenuItem.Text = "Удалить строку";
-            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -520,6 +521,7 @@ namespace Mach3Worklist
         private Timer timer1;
         private ExeMode eMode;
         private ExeStatus eStatus;
+        private M3Status m3Status;
         private string listFileName;
         private int currentLineIndex;
         private Label label2;

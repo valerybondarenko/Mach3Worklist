@@ -36,12 +36,21 @@ namespace Mach3Worklist
             Сompleted,
             Aborted
         }
+        private enum M3Status
+        {
+            Non,
+            GCodeLoading,
+            GCodeRuning,
+            GCodeCompleted,
+            GCodeError
+        }
         public Form1()
         {
             InitializeComponent();
             listFileName = "";
             this.Text = "Mach3 worklist "+listFileName;
             eMode = ExeMode.Line;
+
             statusChange(ExeStatus.Ready);
 
 
@@ -66,22 +75,51 @@ namespace Mach3Worklist
         // РАЗДЕЛ МЕНЮ - СПИСОК
         private void addRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            addLine();
+            dlgOpenFile = new OpenFileDialog();
+            dlgOpenFile.Filter = "CNC G-code files (*.tap; *.nc) | *.tap; *nc| All files(*.*) | *.*";
+
+            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
+            {
+                ListViewItem lvItem = new ListViewItem(dlgOpenFile.FileName);
+                lvItem.SubItems.Add("0");
+                lvItem.SubItems.Add("1");
+                lvItem.SubItems.Add("1");
+                this.listView1.Items.Add(lvItem);
+            }
+           // addLine();
         }
 
         private void removeRowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            removeLine();
+            if (listView1.SelectedItems.Count > 0)
+            {
+                this.listView1.Items.Remove(this.listView1.SelectedItems[0]);
+            }
+            // removeLine();
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            moveLineUP();
+            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
+            if (indexSI > 0)
+            {
+                ListViewItem lvItem = this.listView1.SelectedItems[0];
+                listView1.Items.RemoveAt(indexSI);
+                listView1.Items.Insert(indexSI - 1, lvItem);
+            }
+            // moveLineUP();
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            moveLineDown();
+            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
+            if (indexSI < this.listView1.Items.Count - 1)
+            {
+                ListViewItem lvItem = this.listView1.SelectedItems[0];
+                listView1.Items.RemoveAt(indexSI);
+                listView1.Items.Insert(indexSI + 1, lvItem);
+            }
+            // moveLineDown();
         }
 
         private void openGCodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -122,72 +160,13 @@ namespace Mach3Worklist
         {
             zoneLine();
         }
-        private void moveUPToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            moveLineUP();
-        }
 
-        private void moveDOWNToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            moveLineDown();
-        }
-
-        private void addToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            addLine();
-        }
-
-        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            removeLine();
-        }
 
 
 
         // Обработка списка
 
-        private void addLine()
-        {
-            dlgOpenFile = new OpenFileDialog();
-            dlgOpenFile.Filter = "CNC G-code files (*.tap; *.nc) | *.tap; *nc| All files(*.*) | *.*";
 
-            if (dlgOpenFile.ShowDialog() == DialogResult.OK)
-            {
-                ListViewItem lvItem = new ListViewItem(dlgOpenFile.FileName);
-                lvItem.SubItems.Add("0");
-                lvItem.SubItems.Add("1");
-                lvItem.SubItems.Add("1");
-                this.listView1.Items.Add(lvItem);
-            }
-        }
-        private void removeLine()
-        {
-            if (listView1.SelectedItems.Count > 0)
-            {
-                this.listView1.Items.Remove(this.listView1.SelectedItems[0]);
-            }
-        }
-        private void moveLineUP()
-        {
-            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
-            if (indexSI > 0)
-            {
-                ListViewItem lvItem = this.listView1.SelectedItems[0];
-                listView1.Items.RemoveAt(indexSI);
-                listView1.Items.Insert(indexSI - 1, lvItem);
-            }
-        }
-
-        private void moveLineDown()
-        {
-            int indexSI = this.listView1.Items.IndexOf(this.listView1.SelectedItems[0]);
-            if (indexSI < this.listView1.Items.Count - 1)
-            {
-                ListViewItem lvItem = this.listView1.SelectedItems[0];
-                listView1.Items.RemoveAt(indexSI);
-                listView1.Items.Insert(indexSI + 1, lvItem);
-            }
-        }
 
         private void quantityLine()
         {
@@ -431,10 +410,10 @@ namespace Mach3Worklist
             
             int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
             int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
+          //  _mInst.LoadRun(this.listView1.SelectedItems[0].SubItems[0].Text);
           //  this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
+            if (m3Status!=M3Status.GCodeCompleted) { return; }
 
-            _mInst.LoadRun(this.listView1.SelectedItems[0].SubItems[0].Text);
-            if (gcoderun) { return; }
             if (this.eMode == ExeMode.Circle)
             {
                 if (count < quota)
@@ -490,25 +469,19 @@ namespace Mach3Worklist
         private void timer1_Tick(object sender, EventArgs e)
         {
             if(_mInst == null) { return; }
-            if (eStatus == ExeStatus.Runing) 
+            if (_mInst.IsLoading()==1) { m3Status = M3Status.GCodeLoading;}
+            if (m3Status == M3Status.GCodeLoading&&_mInst.GetOEMLed(804)) {m3Status = M3Status.GCodeRuning;}
+            if(m3Status==M3Status.GCodeRuning&& _mInst.GetOEMLed(804) == false)
             {
-                short m3alarm = _mInst.IsEstop(); // EStop
-                if (m3alarm==1) 
-                {
-                    gcoderun=false;
-                    statusChange(ExeStatus.Aborted);
-                    return;
-                }
-                bool m3run = _mInst.GetOEMLed(804); // Run Led off
-                if (m3run)
-                {
-                    
-                    this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
-                } else
-                {
+                if (_mInst.IsEstop()==1) { m3Status = M3Status.GCodeError; } 
+                else 
+                { 
+                    m3Status = M3Status.GCodeCompleted;
                     stepList();
+                    statusChange(ExeStatus.Runing);
                 }
             }
+
         }
 
         private void btnStart_Click_1(object sender, EventArgs e)
@@ -517,13 +490,13 @@ namespace Mach3Worklist
 
             if (this.listView1.SelectedItems.Count < 1) { return;}
             if(eStatus==ExeStatus.Non) { return; }
-            if (eStatus!=ExeStatus.Runing)
-            {
-                statusChange(ExeStatus.Runing);
-            } 
-            else if(eStatus == ExeStatus.Runing)
+            if (eStatus == ExeStatus.Runing)
             {
                 statusChange(ExeStatus.Stoped);
+            }
+            else
+            {
+                statusChange(ExeStatus.Runing);
             }
         }
 
@@ -536,8 +509,10 @@ namespace Mach3Worklist
                 if (listView1.SelectedIndices.Count > 0)
                 {
                     this.btnStart.Text = "Стоп";
-                    this.eStatus = ExeStatus.Runing;
-                    stepList();
+                    int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
+                    int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
+                    _mInst.LoadRun(this.listView1.SelectedItems[0].SubItems[0].Text);
+                    this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
                 }
 
             }
@@ -604,8 +579,6 @@ namespace Mach3Worklist
                 listView1.SelectedIndices.Add(currentLineIndex);
             }
         }
-
-       
 
 
     }
