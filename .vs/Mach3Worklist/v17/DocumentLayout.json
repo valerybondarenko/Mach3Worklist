@@ -52,8 +52,7 @@
               "ViewState": "AgIAAFcAAAAAAAAAAAAYwMkBAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-23T18:44:16.873Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
@@ -71,7 +70,7 @@
               "RelativeDocumentMoniker": "Mach3Worklist\\Form1.cs",
               "ToolTip": "C:\\Users\\green\\source\\repos\\Mach3Worklist\\Mach3Worklist\\Form1.cs",
               "RelativeToolTip": "Mach3Worklist\\Form1.cs",
-              "ViewState": "AgIAAJMBAAAAAAAAAAAswJ0BAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAFABAAAAAAAAAAAYwGABAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-02T10:40:22.053Z",
               "EditorCaption": ""

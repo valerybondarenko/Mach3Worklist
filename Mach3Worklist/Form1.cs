@@ -268,7 +268,7 @@ namespace Mach3Worklist
         }
 
         // ОБРАБОТКА СОБЫТИЙ СПИСКА
-        // Клик на списке
+        // Клик на списке, сохраняем индекс текущей строки
         private void listView1_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedItems.Count > 0)
@@ -321,6 +321,10 @@ namespace Mach3Worklist
         }
 
         // РАЗДЕЛ МЕНЮ - НАСТРОЙКИ
+        // Выбор режима обхода списка по кругу
+        // пока не достигнута квота выполняем по 1 разу программу из текущей строки
+        // с переходом на следующую
+        // список выполнен когда во всех строках количество равно квоте
         private void circleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.circleToolStripMenuItem.Checked = true;
@@ -329,7 +333,10 @@ namespace Mach3Worklist
             this.lblMode.Text = "По кругу";
             this.eMode = ExeMode.Circle;
         }
-
+        // Выбор режима обхода списка линейно
+        // пока в текущей строке количество не сравняется с квотой
+        // выполняем программу из текущей строки, затем переходим к следующей строке
+        // список выполнен когда в последней строке количество достигнет квоты
         private void lineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.lineToolStripMenuItem.Checked = true;
@@ -338,7 +345,13 @@ namespace Mach3Worklist
             this.lblMode.Text = "Линейно";
             this.eMode = ExeMode.Line;
         }
-
+        // Выбор режима обхода списка по выбору внешней кнопкой
+        // в этом режиме производится опрос Mach3 на активацию
+        // входов  функцией IsActive(Input);
+        // привязка входов производится в экземпляре класса Zone
+        // Список просматривается сверху вниз каждый раз после срабатывания
+        // внешней кнопки.  
+        // 
         private void selectiveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.selectiveToolStripMenuItem.Checked = true;
@@ -387,7 +400,7 @@ namespace Mach3Worklist
                 }
             }
             else if (this.eMode == ExeMode.Line)
-                if (quota > count)
+                if (count < quota-1)
                 {
                     count++;
                     this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
@@ -420,6 +433,7 @@ namespace Mach3Worklist
                 { 
                     m3Status = M3Status.GCodeCompleted;
                     stepList();
+                    if (eStatus == ExeStatus.Сompleted) { return; }
                     statusChange(ExeStatus.Stoped);
                 }
             }
@@ -449,10 +463,6 @@ namespace Mach3Worklist
                 if (listView1.SelectedIndices.Count > 0)
                 {
                     this.btnStart.Text = "Стоп";
-                    int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
-                    int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
-                    _mInst.LoadRun(this.listView1.SelectedItems[0].SubItems[0].Text);
-                    this.lblStatus.Text = "Выполняется - " + this.listView1.SelectedItems[0].SubItems[0].Text;
                 }
             }
             else if (this.eStatus == ExeStatus.Stoped)
@@ -503,10 +513,6 @@ namespace Mach3Worklist
                 lblStatus.Text = "Авария!!!";
             }
         }
-        private void Page(int UpOrDown)
-        {
-            //Determine if something is selected
-            
-        }
+        
     }
 }
