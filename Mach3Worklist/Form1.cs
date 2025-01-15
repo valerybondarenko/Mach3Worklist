@@ -49,27 +49,28 @@ namespace Mach3Worklist
             InitializeComponent();
             listFileName = "";
             this.Text = "Mach3 worklist "+listFileName;
+            // здесь будет загрузка сохраненных настроек
             eMode = ExeMode.Line;
-
-            statusChange(ExeStatus.Ready);
-
-
+            if (GetMachInstance())
+                eStatus = ExeStatus.Ready;
+            updateUI(eStatus);
         }
 
         // Раздел взаимодействие с Mach3
-        public void GetMachInstance(IMach4 _mach)
+        public bool GetMachInstance()
         {
             try
             {
                 _mach = (IMach4)Marshal.GetActiveObject("Mach4.Document");
                 _mInst = (IMyScriptObject)_mach.GetScriptDispatch();
+                return true; 
             }
             catch
             {
                 _mach = null;
                 _mInst = null;
+                return false;
             }
-
         }
         // МЕНЮ
         // РАЗДЕЛ МЕНЮ - ФАЙЛ
@@ -88,7 +89,10 @@ namespace Mach3Worklist
                 listView1.Items.Clear();
                 listFileName = "";
                 this.Text = "Mach3 worklist " + listFileName;
-                statusChange(ExeStatus.Ready);
+                updateUI(ExeStatus.Ready);
+                timer1.Enabled = true;
+                timer1.Interval = 50;
+                timer1.Start();
             }
         }
         private bool savePromt()
@@ -169,7 +173,7 @@ namespace Mach3Worklist
                     line = sr.ReadLine();
                 }
                 sr.Close();
-                statusChange(ExeStatus.Ready);
+                updateUI(ExeStatus.Ready);
             }
         }
 
@@ -362,8 +366,8 @@ namespace Mach3Worklist
         }
         private void connectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetMachInstance(null);
-            statusChange(ExeStatus.Ready);
+            if(GetMachInstance())
+            updateUI(ExeStatus.Ready);
         }
 
 
@@ -373,6 +377,7 @@ namespace Mach3Worklist
         {
             int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
             int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
+            if (!worklistComplete()) { _mInst.LoadRun(this.listView1.Items[currentLineIndex].Text);}
             if (m3Status!=M3Status.GCodeCompleted) { return; }
             if (this.eMode == ExeMode.Circle)
             {
@@ -395,7 +400,7 @@ namespace Mach3Worklist
                 }
                 else
                 {
-                    statusChange(ExeStatus.Сompleted);
+                    updateUI(ExeStatus.Сompleted);
                     return;
                 }
             }
@@ -413,7 +418,7 @@ namespace Mach3Worklist
                 }
                 else
                 {
-                    statusChange(ExeStatus.Сompleted);
+                    updateUI(ExeStatus.Сompleted);
                     return;
                 }
             else if (this.eMode == ExeMode.Selective)
@@ -434,7 +439,7 @@ namespace Mach3Worklist
                     m3Status = M3Status.GCodeCompleted;
                     stepList();
                     if (eStatus == ExeStatus.Сompleted) { return; }
-                    statusChange(ExeStatus.Stoped);
+                    updateUI(ExeStatus.Stoped);
                 }
             }
         }
@@ -446,41 +451,40 @@ namespace Mach3Worklist
             if(eStatus==ExeStatus.Non) { return; }
             if (eStatus == ExeStatus.Runing)
             {
-                statusChange(ExeStatus.Stoped);
+                updateUI(ExeStatus.Stoped);
             }
             else
             {
-                statusChange(ExeStatus.Runing);
+                updateUI(ExeStatus.Runing);
+                stepList();
             }
         }
 
-        private void statusChange(ExeStatus status)
+        private void updateUI(ExeStatus status)
         {
-            if (eStatus == status) { return;}
-            this.eStatus=status;
-            if (this.eStatus == ExeStatus.Runing)
+
+            if (status == ExeStatus.Runing)
             {
                 if (listView1.SelectedIndices.Count > 0)
                 {
                     this.btnStart.Text = "Стоп";
                 }
             }
-            else if (this.eStatus == ExeStatus.Stoped)
+            else if (status == ExeStatus.Stoped)
             {
                // this.timer1.Stop();
                 this.btnStart.Text = "Старт";
                 this.lblStatus.Text = "Остановлен";
             }
-            else if (this.eStatus == ExeStatus.Сompleted)
+            else if (status == ExeStatus.Сompleted)
             {
                // this.timer1.Stop();
                 this.btnStart.Text = "Старт";
                 this.lblStatus.Text = "Завершен";
             }
-            else if (this.eStatus == ExeStatus.Ready)
+            else if (status == ExeStatus.Ready)
             {
-                GetMachInstance(null);
-                if (_mInst == null)
+                if (!GetMachInstance())
                 {
                     lblStatus.Text = "Нет подключения";
                     eStatus = ExeStatus.Non;
@@ -489,9 +493,6 @@ namespace Mach3Worklist
                 else
                 {
                     lblStatus.Text = "Подключено к - " + _mInst.GetActiveProfileName();
-                    this.timer1.Enabled = true;
-                    this.timer1.Interval = 50;
-                    this.timer1.Start();
                 }
                 this.btnStart.Text = "Старт";
 
@@ -508,10 +509,39 @@ namespace Mach3Worklist
                         break;
                 }
             }
-            else if (eStatus == ExeStatus.Aborted) 
+            else if (status == ExeStatus.Aborted) 
             {
                 lblStatus.Text = "Авария!!!";
             }
+        }
+        // Проверка на полное выполнение списка
+        // Список выполнен если в режиме обхода по кругу количество равно квоте в каждой строке
+        // в режиме линейно количество равно квоте в последней строке списка 
+        // режим выборочно ......
+        private bool worklistComplete()
+        {
+            int stepCount = this.listView1.Items.Count;
+            int index = currentLineIndex;
+            if (eMode == ExeMode.Line) 
+            {
+                stepCount -= currentLineIndex;
+            }
+            for (int i = 0; i < stepCount; i++)
+            {
+                int quota = System.Convert.ToInt32(this.listView1.Items[index].SubItems[2].Text);
+                int count = System.Convert.ToInt32(this.listView1.Items[index].SubItems[1].Text);
+                if (count != quota)
+                {
+                    currentLineIndex = index;
+                    return false;
+                }
+                index++;
+                if (index== this.listView1.Items.Count)
+                {
+                    index = 0;
+                }
+            }
+            return true;
         }
         
     }
