@@ -20,3 +20,5 @@ C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.
 C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.pdb
 C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Interop.Mach4.dll
 C:\Users\green\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.csproj.ResolveComReference.cache
+C:\Users\Admin\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Interop.Mach4.dll
+C:\Users\Admin\source\repos\Mach3Worklist\Mach3Worklist\obj\Debug\Mach3Worklist.csproj.ResolveComReference.cache

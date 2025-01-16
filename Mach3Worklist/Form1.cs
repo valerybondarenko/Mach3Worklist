@@ -54,6 +54,9 @@ namespace Mach3Worklist
             if (GetMachInstance())
                 eStatus = ExeStatus.Ready;
             updateUI(eStatus);
+            timer1.Enabled = true;
+            timer1.Interval = 50;
+            timer1.Start();
         }
 
         // Раздел взаимодействие с Mach3
@@ -90,9 +93,6 @@ namespace Mach3Worklist
                 listFileName = "";
                 this.Text = "Mach3 worklist " + listFileName;
                 updateUI(ExeStatus.Ready);
-                timer1.Enabled = true;
-                timer1.Interval = 50;
-                timer1.Start();
             }
         }
         private bool savePromt()
@@ -373,17 +373,27 @@ namespace Mach3Worklist
 
 
         // ОБРАБОТКА ВЫПОЛНЕНИЯ ПРОГРАММ 
-        private void stepList()
+        private void firstStep()
+        {
+            if (!worklistComplete()) { _mInst.LoadRun(this.listView1.Items[currentLineIndex].Text);}
+            else 
+            {
+                eStatus=ExeStatus.Сompleted; 
+                updateUI(eStatus);
+            }
+        }
+
+        private void nextStep()
         {
             int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
             int count = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[1].Text);
-            if (!worklistComplete()) { _mInst.LoadRun(this.listView1.Items[currentLineIndex].Text);}
-            if (m3Status!=M3Status.GCodeCompleted) { return; }
+            if (m3Status != M3Status.GCodeCompleted) { return; }
+            count++;
             if (this.eMode == ExeMode.Circle)
             {
-                if (count < quota)
+                if (count <= quota)
                 {
-                    count++;
+                    
                     this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
                     if (this.listView1.Items.Count > currentLineIndex + 1)
                     {
@@ -405,9 +415,9 @@ namespace Mach3Worklist
                 }
             }
             else if (this.eMode == ExeMode.Line)
-                if (count < quota-1)
+                if (count <= quota )
                 {
-                    count++;
+                   // count++;
                     this.listView1.Items[currentLineIndex].SubItems[1].Text = count.ToString();
                 }
                 else if (currentLineIndex + 1 < this.listView1.Items.Count)
@@ -437,7 +447,7 @@ namespace Mach3Worklist
                 else 
                 { 
                     m3Status = M3Status.GCodeCompleted;
-                    stepList();
+                    nextStep();
                     if (eStatus == ExeStatus.Сompleted) { return; }
                     updateUI(ExeStatus.Stoped);
                 }
@@ -456,7 +466,7 @@ namespace Mach3Worklist
             else
             {
                 updateUI(ExeStatus.Runing);
-                stepList();
+                firstStep();
             }
         }
 
@@ -468,11 +478,11 @@ namespace Mach3Worklist
                 if (listView1.SelectedIndices.Count > 0)
                 {
                     this.btnStart.Text = "Стоп";
+                    this.lblStatus.Text = "Выполняется " + this.listView1.Items[currentLineIndex].Text;
                 }
             }
             else if (status == ExeStatus.Stoped)
             {
-               // this.timer1.Stop();
                 this.btnStart.Text = "Старт";
                 this.lblStatus.Text = "Остановлен";
             }
