@@ -77,6 +77,7 @@ namespace Mach3Worklist
         }
         // МЕНЮ
         // РАЗДЕЛ МЕНЮ - ФАЙЛ
+        // Новый ворклист
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             newList();
@@ -95,6 +96,7 @@ namespace Mach3Worklist
                 updateUI(ExeStatus.Ready);
             }
         }
+        // подтверждение сохранения изменений
         private bool savePromt()
         {
             string message = "Сохранить изменения?";
@@ -108,7 +110,7 @@ namespace Mach3Worklist
             }
             return false;
         }
-
+        // Сохранить ворклист
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveList();
@@ -136,7 +138,7 @@ namespace Mach3Worklist
                 this.Text = "Mach3 worklist " + listFileName;
             }
         }
-
+        // Сохранить ворклист под новым именем
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -147,7 +149,7 @@ namespace Mach3Worklist
             }
             saveList();
         }
-
+        // Открыть ворклист
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             newList();
@@ -227,13 +229,13 @@ namespace Mach3Worklist
             }
         }
 
-        // 
+        // Открыть программу G-code для просмотра и изменения
         private void openGCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
         // ВВОД ЗНАЧЕНИЙ В СПИСОК
-        // Количество
+        // Количество - выполнено
         private void quantityEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedIndices.Count < 1) { return; }
@@ -245,7 +247,7 @@ namespace Mach3Worklist
                 SelectedLSI.Text = output;
             }
         }
-        // Квота
+        // Квота - выполнить
         private void quotaEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedIndices.Count < 1) { return; }
@@ -257,7 +259,7 @@ namespace Mach3Worklist
                 SelectedLSI.Text = output;
             }
         }
-        // Зона
+        // Зона - номер рабочей зоны
         private void zoneEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedIndices.Count < 1) { return; }
@@ -268,7 +270,6 @@ namespace Mach3Worklist
             {
                 SelectedLSI.Text = output;
             }
-            //zoneLine();
         }
 
         // ОБРАБОТКА СОБЫТИЙ СПИСКА
@@ -364,6 +365,8 @@ namespace Mach3Worklist
             this.lblMode.Text = "Выборочно";
             this.eMode = ExeMode.Selective;
         }
+
+        // Подключение к Mach3 если прервалось соединение
         private void connectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(GetMachInstance())
@@ -371,18 +374,15 @@ namespace Mach3Worklist
         }
 
 
-
         // ОБРАБОТКА ВЫПОЛНЕНИЯ ПРОГРАММ 
+        // Первый этап выполнения программы
+        // Если список не выполнен - загружается программа из текущей строки списка
         private void firstStep()
         {
             if (!worklistComplete()) { _mInst.LoadRun(this.listView1.Items[currentLineIndex].Text);}
-            else 
-            {
-                eStatus=ExeStatus.Сompleted; 
-                updateUI(eStatus);
-            }
         }
-
+        // После выполнения программы увеличивается количество в текущей строке
+        // 
         private void nextStep()
         {
             int quota = System.Convert.ToInt32(this.listView1.SelectedItems[0].SubItems[2].Text);
@@ -448,8 +448,13 @@ namespace Mach3Worklist
                 { 
                     m3Status = M3Status.GCodeCompleted;
                     nextStep();
+                    if(worklistComplete())
+                    {
+                        eStatus = ExeStatus.Сompleted;
+                        updateUI(eStatus);
+                    }
                     if (eStatus == ExeStatus.Сompleted) { return; }
-                    updateUI(ExeStatus.Stoped);
+                    updateUI(ExeStatus.Runing);
                 }
             }
         }
