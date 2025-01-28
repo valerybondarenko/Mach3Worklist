@@ -26,6 +26,7 @@ namespace Mach3Worklist
         public Tokenizer()
         {
             commands = new Dictionary<string, CommandType>();
+            tokens = new List<Token>();
             stringLine = "";
             commands.Add("(", CommandType.Message);
             commands.Add("%", CommandType.Coment);
@@ -54,12 +55,29 @@ namespace Mach3Worklist
             commands.Add("V", CommandType.Axis);
             commands.Add("W", CommandType.Axis);
         }
+        private int getMessagelength(int sCursor)
+        {
+            string mark = ")";
+            int i = 0;
+            sCursor++;
+            for ( ; i < stringLine.Length - sCursor; i++)
+            {
+                if (mark == stringLine.Substring(sCursor, 1))
+                    break;
+                sCursor++;
+            }
+            return i;
+        }
+
         private Dictionary<string, CommandType> commands;
+        private List<Token> tokens;
         private string stringLine;
-        private int stringLineIndex;         
+        private int stringLineIndex;
+        private Token token;
+        
         public void tokenize(string sValue, int iValue)
         {
-            if (stringLine == null) 
+            if (sValue==null || sValue == "") 
             {
                 return;
             }
@@ -68,18 +86,24 @@ namespace Mach3Worklist
             string key = "";
             stringLine = sValue;
             stringLineIndex = iValue;
+            
             while (cursor < stringLine.Length)
             {
                 key = stringLine.Substring(cursor,1);
                 if (commands.TryGetValue(key, out command)) 
                 {
+                    token = new Token();
+                    token.Command = key;
+                    token.Type = command;
                     switch (command)
                     {
                         case CommandType.Badcommand:
-
                             break;
-                        case CommandType.Coment:
-
+                        case CommandType.Message:
+                           int messageLength = getMessageLength(cursor);
+                            cursor++;
+                            token.Argument = stringLine.Substring(cursor, messageLength);
+                            tokens.Add(token);
                             break;
                     }
                 } else { command = CommandType.Badcommand; }
@@ -89,5 +113,9 @@ namespace Mach3Worklist
 
         }
 
+        private int getMessageLength(int cursor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
