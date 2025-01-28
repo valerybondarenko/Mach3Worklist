@@ -6,23 +6,16 @@ using System.Threading.Tasks;
 
 namespace Mach3Worklist
 {
-    internal class Token : TokenBase
+    internal class Token 
     {
-       public enum CommandType
-        {
-            Badcommand,
-            Coment,
-            GCode,
-            MCode
-        }
+       
         public Token()
         {
-            Type = CommandType.Badcommand;
+            Type = Tokenizer.CommandType.Badcommand;
             Command = "";
             Argument = "";
         }
-
-        public CommandType Type { get; set; }
+        public Tokenizer.CommandType Type { get; set; }
         public string Command { get; set; }
         public string Argument { get; set; }
     }

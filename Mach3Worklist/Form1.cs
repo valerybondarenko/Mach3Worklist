@@ -558,6 +558,11 @@ namespace Mach3Worklist
             }
             return true;
         }
-        
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Tokenizer tokenizer = new Tokenizer();
+            tokenizer.tokenize("ab;df",0);
+        }
     }
 }
